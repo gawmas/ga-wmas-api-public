@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  postgres-service:
+    image: postgres:15-alpine
+    container_name: gawmas-postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - gawmas-pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: CharlieBubba123
+
+  gawmas-api-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gawmas-api
+    ports:
+      - "3005:3005"
+    volumes:
+      - /gawmas  # Adjust the path to your Node.js app code
+
+volumes:
+  gawmas-pgdata:
