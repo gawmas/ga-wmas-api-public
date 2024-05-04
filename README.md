@@ -1,2 +1,3 @@
-# ga-wmas-api-public
-Public api src 
+# Georgia WMAs API - Public
+Public api for georgiawmas.com - NodeJS/Express
+
