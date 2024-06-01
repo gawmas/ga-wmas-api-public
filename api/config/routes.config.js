@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { allHuntsFn, getOneHuntFn } from '../controllers/hunt.controller.js'; 
+import { queryHuntsFn, getOneHuntFn } from '../controllers/hunt.controller.js'; 
 import { allWmasFn, wmaCoordsFn, wmaMapCoordsFn } from '../controllers/wma.controller.js';
 import { allSeasonsFn } from '../controllers/season.controller.js';
 import { allWeaponsFn } from '../controllers/weapon.controller.js';
@@ -12,7 +12,7 @@ export function setupRoutes(app, db) {
 
   const slug = process.env.SLUG || 'api';
 
-  app.use(`/${slug}/hunts`, allHuntsFn(db));
+  app.use(`/${slug}/hunts`, queryHuntsFn(db));
   app.get(`/${slug}/hunt/:id`, getOneHuntFn(db));
 
   app.use(`/${slug}/wmas`, allWmasFn(db));
