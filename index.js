@@ -14,7 +14,7 @@ app.use(cors(corsConfig));
 setupRoutes(app, db);
 
 // Start the server
-app.listen(port, host, () => {
+app.listen(port, "0.0.0.0", () => {
   console.log(`*** PUBLIC API ***`);
   console.log(`Running on ${host}:${port}`);
 });

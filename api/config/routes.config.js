@@ -10,7 +10,7 @@ import { mapDataFn } from '../controllers/map.controller.js';
 export function setupRoutes(app, db) {
   const router = Router();
 
-  const slug = process.env.SLUG || 'api';
+  const slug = process.env.PUBLIC_SLUG || 'api';
 
   app.use(`/${slug}/hunts`, queryHuntsFn(db));
   app.get(`/${slug}/hunt/:id`, getOneHuntFn(db));

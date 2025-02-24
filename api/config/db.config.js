@@ -6,7 +6,7 @@ dotenv.config();
 
 // Database connection configuration
 const dbConfig = {
-  connectionString: process.env.DB_CONN,
+  connectionString: process.env.DATABASE_URL,
   // Other connection options if needed
 };
 
