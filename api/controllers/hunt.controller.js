@@ -163,7 +163,7 @@ function calculateAverages(dateRanges, temperatureData) {
 
 const getOneHuntFn = (db) => async (req, res) => {
   const id = req.params.id;
-  const query = new pq('SELECT * FROM public."vwHunts7" WHERE "id" = $1');
+  const query = new pq('SELECT * FROM public."vwHunts3" WHERE "id" = $1');
   try {
     const data = await db.oneOrNone(query, id);
     res.json(data);
