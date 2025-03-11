@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import { updateHuntFn } from '../controllers/admin/admin.hunt.controller.js';
 import { adminWmasFn, updateWmaFn } from '../controllers/admin/admin.wma.controller.js';
 
-export function setupAuthRoutes(app, db) {
+export function setupAdminRoutes(app, db) {
 
   const router = Router();
 
