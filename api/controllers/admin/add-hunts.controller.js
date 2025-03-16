@@ -7,13 +7,17 @@ import https from 'https';
  * @returns {Function} 
  */
 const scrapedHuntsFn = () => async (req, res) => {
-  const page = req.query.page;
-  const skip = page * 20;
 
   try {
     const huntsJson = fs.readFileSync('tasks/output/2024.json');
-    const hunts = JSON.parse(huntsJson);
-    res.status(200).json(hunts.slice(skip, skip + 20));
+    const data = JSON.parse(huntsJson);
+    const total = data.length;
+    const hunts = data.slice(300, 305);
+    const results = {
+      total,
+      data: hunts
+    }
+    res.status(200).json(results);
   } catch (error) {
     console.error(error);
     res.status(500).json({
@@ -30,7 +34,6 @@ const testWeatherStackFn = () => async (req, res) => {
   const url = `${process.env.WEATHERSTACK_API}?access_key=${process.env.WEATHERSTACK_API_KEY}&units=f&&query=New York,New York,USA&historical_date_start=2024-09-14&historical_date_end=2024-10-11`;
   try {
     const data = await fetchWeatherData(url);
-    console.log(data);
     res.status(200).json(JSON.parse(data));
   } catch (error) {
     console.error(error);
