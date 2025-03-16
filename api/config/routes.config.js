@@ -6,6 +6,7 @@ import { allWeaponsFn } from '../controllers/weapon.controller.js';
 import { histClimateLocationsFn, histClimateLocationsCoordsFn } from '../controllers/histClimateLocation.controller.js';
 import { wxDetailedFn } from '../controllers/wx.controller.js';
 import { mapDataFn } from '../controllers/map.controller.js';
+import { allHuntTypesFn } from '../controllers/huntTypes.controller.js';
 
 export function setupRoutes(app, db) {
   const router = Router();
@@ -16,10 +17,10 @@ export function setupRoutes(app, db) {
   app.get(`/${slug}/hunt/:id`, getOneHuntFn(db));
 
   app.use(`/${slug}/wmas`, allWmasFn(db));
-
   app.use(`/${slug}/seasons`, allSeasonsFn(db));
   app.use(`/${slug}/weapons`, allWeaponsFn(db));
   app.use(`/${slug}/histClimateLocations`, histClimateLocationsFn(db));
+  app.use(`/${slug}/huntTypes`, allHuntTypesFn(db));
 
   app.use(`/${slug}/climateCoords`, histClimateLocationsCoordsFn(db));
   app.use(`/${slug}/wmaCoords`, wmaCoordsFn(db));

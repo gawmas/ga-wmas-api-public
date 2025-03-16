@@ -12,7 +12,7 @@ const scrapedHuntsFn = () => async (req, res) => {
     const huntsJson = fs.readFileSync('tasks/output/2024.json');
     const data = JSON.parse(huntsJson);
     const total = data.length;
-    const hunts = data.slice(300, 305);
+    const hunts = data.slice(50, 70);
     const results = {
       total,
       data: hunts
