@@ -2,7 +2,7 @@ const allHuntTypesFn = (db) => async (req, res) => {
   try {
 
     // Build the base query
-    const returnQuery = db.many(`select * from public."huntTypes" order by id;`);
+    const returnQuery = db.many(`select * from public.hunt_types order by id;`);
 
     // Execute the query
     const data = await returnQuery;

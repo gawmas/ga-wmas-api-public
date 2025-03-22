@@ -2,7 +2,7 @@ const allSeasonsFn = (db) => async (req, res) => {
   try {
 
     // Build the base query
-    const returnQuery = db.many(`select * from public.seasons2 order by season desc;`);
+    const returnQuery = db.many(`SELECT * FROM public.seasons order by season desc;`);
 
     // Execute the query
     const data = await returnQuery;

@@ -9,7 +9,7 @@ const wxDetailedFn = (db) => async (req, res) => {
 
   try {
     const data = await db.oneOrNone(query, id);
-    const returnData = groupDataByDate4(data.fn_wx_detailed_full);
+    const returnData = groupDataByDate(data.fn_wx_detailed_full);
     res.json(returnData);
   } catch (error) {
     console.error(error);
@@ -21,7 +21,7 @@ const wxDetailedFn = (db) => async (req, res) => {
 
 }
 
-function groupDataByDate4(data) {
+function groupDataByDate(data) {
   const groupedData = {
       primetimes: {},
       astros: data.astros,

@@ -2,7 +2,7 @@ const histClimateLocationsFn = (db) => async (req, res) => {
   try {
 
     // Build the base query
-    const returnQuery = db.many(`select * from public."histClimateLocations" order by town asc;`);
+    const returnQuery = db.many(`SELECT * FROM public.hist_climate_locations ORDER BY town asc;`);
 
     // Execute the query
     const data = await returnQuery;
@@ -23,7 +23,7 @@ const histClimateLocationsCoordsFn = (db) => async (req, res) => {
   try {
 
     // Build the base query
-    const returnQuery = db.many(`select * from public."vwClimateLocations";`);
+    const returnQuery = db.many(`SELECT * FROM public.vw_climate_locations;`);
 
     // Execute the query
     const data = await returnQuery;
@@ -31,7 +31,7 @@ const histClimateLocationsCoordsFn = (db) => async (req, res) => {
     // Send the response
     res.json(
       data.flatMap(item =>
-        item.climateMarkers.map(marker => ({
+        item.climate_markers.map(marker => ({
           town: marker.town,
           coords: marker.coords,
           hasDailyData: marker.hasDailyData

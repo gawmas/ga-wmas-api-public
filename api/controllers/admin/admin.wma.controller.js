@@ -2,7 +2,7 @@ const adminWmasFn = (db) => async (req, res) => {
   try {
 
     // Build the base query
-    const returnQuery = db.many(`select * from "vwWmas" vw order by name;`);
+    const returnQuery = db.many(`SELECT * FROM vw_wmas vw ORDER BY name;`);
 
     // Execute the query
     const data = await returnQuery;
@@ -32,10 +32,10 @@ const updateWmaFn = (db) => async (req, res) => {
         text: `
         update "wmas" 
         set name = $1, 
-        "physLat" = $2, 
-        "physLong" = $3,
-        "isSP" = $4,
-        "isVPA" = $5,
+        phys_lat = $2, 
+        phys_long = $3,
+        is_sp = $4,
+        is_vpa" = $5,
         "hasBonusQuotas" = $6,
         acres = $7
         where id = $8;`,
@@ -45,7 +45,7 @@ const updateWmaFn = (db) => async (req, res) => {
 
       const climateQuery = {
         text: `
-        update "wmaLocations" 
+        UPDATE public.wma_locations
         set "histClimateId" = $1
         where id = $2;`,
         values: [params.histClimateTownId, params.locationId]

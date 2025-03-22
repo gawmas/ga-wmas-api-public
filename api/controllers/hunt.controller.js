@@ -16,17 +16,17 @@ const queryHuntsFn = (db) => async (req, res) => {
     }
 
     const conditions = [
-      'select * from public."mvwHunts3" WHERE 1=1',
-      wmas ? `"wmaId" = ANY(string_to_array($1, ',')::integer[])` : `"wmaId" IS NOT NULL`,
-      seasons ? `"seasonId" = ANY(string_to_array($2, ',')::integer[])` : `"seasonId" IS NOT NULL`,
-      weapons ? `"weaponId" = ANY(string_to_array($3, ',')::integer[])` : `"weaponId" IS NOT NULL`,
-      success ? `"successRate" >= $4` : `"successRate" IS NOT NULL`,
-      isBonusQuota === 'true' ? `"isQuotaOrBonus" = true` : `"isQuotaOrBonus" IS NOT NULL`,
-      isStatePark === 'true' ? `"wmaTypeSP" = true` : `"wmaTypeSP" IS NOT NULL`,
-      isVpa === 'true' ? `"wmaTypeVPA" = true` : ``,
-      (tempDepart && tempDepart === 'above') ? `(("huntMinTemp"::NUMERIC - "avgLow"::NUMERIC) > $5 OR ("huntMaxTemp"::NUMERIC - "avgHigh"::NUMERIC) > $5)` : ``,
-      (tempDepart && tempDepart === 'below') ? `(("huntMinTemp"::NUMERIC - "avgLow"::NUMERIC) < $5 OR ("huntMaxTemp"::NUMERIC - "avgHigh"::NUMERIC) < $5)` : ``,      
-      phase ? `"wxDetails"::text LIKE $6` : ``
+      'select * from public.mvw_hunts WHERE 1=1',
+      wmas ? `wma_id = ANY(string_to_array($1, ',')::integer[])` : `wma_id IS NOT NULL`,
+      seasons ? `season_id = ANY(string_to_array($2, ',')::integer[])` : `season_id IS NOT NULL`,
+      weapons ? `weapon_id = ANY(string_to_array($3, ',')::integer[])` : `weapon_id IS NOT NULL`,
+      success ? `success_rate >= $4` : `success_rate IS NOT NULL`,
+      isBonusQuota === 'true' ? `is_quota_or_bonus = true` : `is_quota_or_bonus IS NOT NULL`,
+      isStatePark === 'true' ? `wma_type_sp = true` : `wma_type_sp IS NOT NULL`,
+      isVpa === 'true' ? `wma_type_vpa = true` : ``,
+      (tempDepart && tempDepart === 'above') ? `((hunt_min_temp::NUMERIC - avg_low::NUMERIC) > $5 OR (hunt_max_temp::NUMERIC - avg_high::NUMERIC) > $5)` : ``,
+      (tempDepart && tempDepart === 'below') ? `((hunt_min_temp::NUMERIC - avg_low::NUMERIC) < $5 OR (hunt_max_temp::NUMERIC - avg_high::NUMERIC) < $5)` : ``,      
+      phase ? `wx_details::text LIKE $6` : ``
     ];
 
     let departure = undefined;
@@ -83,13 +83,13 @@ const queryHuntsFn = (db) => async (req, res) => {
     let sortOrder = '';
     switch (sort) {
       case 'success':
-        sortOrder = '"successRate" DESC';
+        sortOrder = 'success_rate DESC';
         break;
       case 'hunters':
-        sortOrder = '"hunterCount" DESC';
+        sortOrder = 'hunter_count DESC';
         break;
       default:
-        sortOrder = `"wmaName" ASC, "seasonId" DESC, (SELECT MIN((elem->>'start')::date) FROM jsonb_array_elements("huntDates") AS elem) ASC`;
+        sortOrder = `wma_name ASC, season_id DESC, (SELECT MIN((elem->>'start')::date) FROM jsonb_array_elements(hunt_dates) AS elem) ASC`;
     }
 
     const finalQuery = {
@@ -105,14 +105,34 @@ const queryHuntsFn = (db) => async (req, res) => {
 
     // Execute the query, then map the "wxHistAvgs" property using the calculateAverages() fn ...
     const data = (await returnQuery)
-      .map(d => ({ ...d, wxHistAvgs: calculateAverages(d.huntDates, d.wxAvgs) }));
+      .map(d => ({ ...d, wxHistAvgs: calculateAverages(d.hunt_dates, d.wx_avgs) }))
+      .map(d => {
+        return {
+          // ...d,
+          id: d.id,
+          physLat: d.phys_lat,
+          physLong: d.phys_long,
+          wmaId: d.wma_id,
+          wmaName: d.wma_name,
+          details: d.details,
+          huntDates: d.hunt_dates,
+          seasonId: d.season_id,
+          season: d.season,
+          weaponId: d.weapon_id,
+          hunterCount: d.hunter_count,
+          does: d.does,
+          bucks: d.bucks,
+          wxDetails: d.wx_details,
+          wxHistAvgs: d.wxHistAvgs,
+        };
+      });
 
     // Remove unneeded property: wxAvgs ...
     data.forEach(d => delete d.wxAvgs);
 
     // console.log('data', data);
 
-    res.json(data);
+    res.status(200).json(data);
 
   } catch (error) {
     res.status(500).json({
@@ -163,7 +183,7 @@ function calculateAverages(dateRanges, temperatureData) {
 
 const getOneHuntFn = (db) => async (req, res) => {
   const id = req.params.id;
-  const query = new pq('SELECT * FROM public."vwHunts3" WHERE "id" = $1');
+  const query = new pq('SELECT * FROM public.vw_hunts WHERE id = $1');
   try {
     const data = await db.oneOrNone(query, id);
     res.json(data);

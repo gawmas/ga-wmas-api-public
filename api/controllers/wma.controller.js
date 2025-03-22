@@ -9,7 +9,21 @@ const allWmasFn = (db) => async (req, res) => {
     const data = await returnQuery;
 
     // Send the response
-    res.json(data);
+    res.status(200).json(
+      data.map(wma => {
+        return {
+          id: wma.id,
+          name: wma.name,
+          acres: wma.acres,
+          locationId: wma.location_id,
+          hasBonusQuotas: wma.has_bonus_quotas,
+          isSP: wma.is_sp,
+          isVPA: wma.is_vpa,
+          physLat: wma.phys_lat,
+          physLong: wma.phys_long,
+        };
+      })
+    );
 
   } catch (error) {
     res.status(500).json({
@@ -24,7 +38,7 @@ const wmaCoordsFn = (db) => async (req, res) => {
   try {
 
     // Build the base query
-    const returnQuery = db.many(`select * from "vwWmaLocations";`);
+    const returnQuery = db.many(`select * from public.vw_wma_locations";`);
 
     // Execute the query
     const data = await returnQuery;
@@ -45,11 +59,11 @@ const wmaMapCoordsFn = (db) => async (req, res) => {
   try {
 
     // Build the base query
-    const returnQuery = db.many(`SELECT jsonb_agg AS "wmaCoords" FROM public."vwWmaCoords";`);
+    const returnQuery = db.many(`SELECT jsonb_agg AS "wmaCoords" FROM public.vw_wma_coords;`);
 
     // Execute the query
     const data = await returnQuery;
-    
+
     // Send the response
     res.json(data[0].wmaCoords);
 
