@@ -8,7 +8,25 @@ const adminWmasFn = (db) => async (req, res) => {
     const data = await returnQuery;
 
     // Send the response
-    res.json(data);
+    res.status(200).json(
+      data.map(wma => {
+        return {
+          id: wma.id,
+          name: wma.name,
+          physLat: wma.phys_lat,
+          physLong: wma.phys_long,
+          isSP: wma.is_sp,
+          isVPA: wma.is_vpa,
+          hasBonusQuotas: wma.has_bonus_quotas,
+          acres: wma.acres,
+          locationId: wma.location_id,
+          histClimateTownId: wma.hist_climate_town_id,
+          histClimateTown: wma.hist_climate_town,
+          histClimateLat: wma.hist_climate_lat,
+          histClimateLong: wma.hist_climate_long
+        }
+      })
+    );
 
   } catch (error) {
     res.status(500).json({

@@ -119,6 +119,7 @@ const queryHuntsFn = (db) => async (req, res) => {
           seasonId: d.season_id,
           season: d.season,
           weaponId: d.weapon_id,
+          weapon: d.weapon,
           hunterCount: d.hunter_count,
           does: d.does,
           bucks: d.bucks,
@@ -144,7 +145,9 @@ const queryHuntsFn = (db) => async (req, res) => {
 }
 
 function calculateAverages(dateRanges, temperatureData) {
-  const result = [];
+  let results = [];
+
+  // console.log('dateRanges', dateRanges);
 
   // Iterate over each date range
   dateRanges.forEach(dateRange => {
@@ -158,6 +161,7 @@ function calculateAverages(dateRanges, temperatureData) {
     for (let currentDate = new Date(startDate); currentDate <= endDate; currentDate.setDate(currentDate.getDate() + 1)) {
       // Find corresponding temperature for the current day
       const temperature = temperatureData.find(temperature => temperature.month === currentDate.getMonth() + 1 && temperature.day === currentDate.getDate());
+      // console.log('temperature', temperature);
       if (temperature) {
         highTotal += temperature.high;
         lowTotal += temperature.low;
@@ -169,16 +173,20 @@ function calculateAverages(dateRanges, temperatureData) {
     const averageHigh = count ? highTotal / count : 0;
     const averageLow = count ? lowTotal / count : 0;
 
-    // Push averages to result array
-    result.push({
+    const result = {
       startDate: dateRange.start,
       endDate: dateRange.end,
       avgHigh: +averageHigh.toFixed(2),
       avgLow: +averageLow.toFixed(2)
-    });
-  });
+    };
 
-  return result;
+    console.log('result', result);
+
+    // Push averages to result array
+    results.push(result);
+  });
+  console.log('results', results);
+  return results;
 }
 
 const getOneHuntFn = (db) => async (req, res) => {
