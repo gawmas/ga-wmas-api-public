@@ -8,7 +8,8 @@ import { setupAdminRoutes } from "./api/config/routes.admin.config.js";
 
 const db = await dbConnector.connect();
 const app = express();
-const host = process.env.HOST || 'localhost';
+// const host = process.env.RUN_ON_NETWORK === false || process.env.RUN_ON_NETWORK === 'false' ? process.env.HOST_LOCALHOST : process.env.HOST_NETWORK;
+const host = process.env.HOST_LOCALHOST;
 const port = process.env.API_PORT || 3000;
 
 app.use(cors(corsConfig));
