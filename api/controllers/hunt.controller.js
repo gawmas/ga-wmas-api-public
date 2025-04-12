@@ -180,12 +180,12 @@ function calculateAverages(dateRanges, temperatureData) {
       avgLow: +averageLow.toFixed(2)
     };
 
-    console.log('result', result);
+    // console.log('result', result);
 
     // Push averages to result array
     results.push(result);
   });
-  console.log('results', results);
+  // console.log('results', results);
   return results;
 }
 

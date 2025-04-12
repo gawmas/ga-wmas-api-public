@@ -5,11 +5,13 @@ const { ParameterizedQuery: pq } = pkg;
 const wxDetailedFn = (db) => async (req, res) => {
 
   const id = req.params.id;
-  const query = new pq('SELECT public.fn_wx_detailed_full($1)');
+  const wxQuery = new pq('SELECT public.fn_wx_detailed_full($1)');
+  const huntQuery = new pq('select weapon, hunter_count as "hunterCount", bucks, does, location, hunt_dates as "huntDates" from public.mvw_hunts where id = $1');
 
   try {
-    const data = await db.oneOrNone(query, id);
-    const returnData = groupDataByDate(data.fn_wx_detailed_full);
+    const wxData = await db.oneOrNone(wxQuery, id);
+    const huntData = await db.oneOrNone(huntQuery, id);
+    const returnData = { huntDetails: huntData, ...groupDataByDate(wxData.fn_wx_detailed_full)};
     res.json(returnData);
   } catch (error) {
     console.error(error);
